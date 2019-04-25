@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 
 namespace ReversiKata01
 {
@@ -54,17 +55,39 @@ namespace ReversiKata01
         {
             var candidates = new List<SquareContent>
             {
-                new SquareContent(4, 2, "C"),
-                new SquareContent(5, 2, "C"),
-                new SquareContent(5, 3, "C"),
-                new SquareContent(2, 4, "C"),
-                new SquareContent(2, 5, "C"),
-                new SquareContent(3, 5, "C")
+                new SquareContent(2, 3, "o"),
+                new SquareContent(2, 5, "o"),
+                new SquareContent(3, 2, "o"),
+                new SquareContent(2, 4, "o"),
+                new SquareContent(4, 2, "o"),
+                new SquareContent(4, 5, "o"),
+                new SquareContent(5, 2, "o"),
+                new SquareContent(3, 5, "o"),
+                new SquareContent(5, 3, "o"),
+                new SquareContent(5, 4, "o")
             };
-            Assert.AreEqual(candidates, _board.CandidateSquares);
+            _board.CandidateSquares.Should().BeEquivalentTo(candidates,
+                                               opt => opt.WithoutStrictOrdering()
+                                                         .Excluding(a => a.Content));
+
         }
 
-        private string exampleBoardAtStart()
+		[Test]
+        public void CanFindLegalMoves()
+        {
+	        var legalMoves = new List<SquareContent>
+	        {
+		        new SquareContent(2, 4, "o"),
+		        new SquareContent(3, 5, "o"),
+		        new SquareContent(4, 2, "o"),
+		        new SquareContent(5, 3, "o")
+	        };
+	        _board.CandidateSquares.Should().BeEquivalentTo(legalMoves,
+                                                opt => opt.WithoutStrictOrdering()
+                                                          .Excluding(a => a.Content));
+        }
+
+        private static string exampleBoardAtStart()
         {
             return
 @"........
