@@ -42,6 +42,10 @@ namespace ReversiKata01
 
         public string GetSquareContent(int x, int y)
         {
+            if(x < 0 || x > 7 || y < 0 || y > 7)
+            {
+                return string.Empty;
+            }
             return _squareContents.First(a => a.X == x && a.Y == y).Content;
         }
 
@@ -109,8 +113,6 @@ namespace ReversiKata01
 	                    var targetY = y + yTransform;
                         if(
                             (xTransform == 0 && yTransform ==0)
-                            || targetX < 0 || targetX > 7
-                            || targetY < 0 || targetY > 7
 							|| result
                             )
                         {
@@ -128,9 +130,50 @@ namespace ReversiKata01
 	        get
 	        {
 		        var legalMoves = new List<SquareContent>();
-
+                var candidates = CandidateSquares;
+                foreach(var candidate in candidates)
+                {
+                    for(var xTransform = -1; xTransform <= 1; xTransform++)
+                    {
+                        for(var yTransform = -1; yTransform <= 1; yTransform++)
+                        {
+                            if(testForLine(candidate, xTransform, yTransform)
+                                && !legalMoves.Any(
+                                    a => a.X == candidate.X && a.Y == candidate.Y))
+                            {
+                                legalMoves.Add(candidate);
+                            }
+                        }
+                    }
+                }
 		        return legalMoves;
 	        }
+        }
+
+        private bool testForLine(SquareContent candidate, int xTransform, int yTransform)
+        {
+            var result = false;
+            var currentColor = _nextToMove;
+            var opponentColor = _nextToMove == "B" ? "W" : "B";
+            int x = candidate.X + xTransform;
+            int y = candidate.Y + yTransform;
+
+            if(GetSquareContent(x, y) == opponentColor)
+            {
+                do
+                {
+                    x += xTransform;
+                    y += yTransform;
+                }
+                while (GetSquareContent(x, y) == opponentColor);
+
+                if(GetSquareContent(x, y) == currentColor)
+                {
+                    result = true;
+                }
+            }
+            
+            return result;
         }
 
 		

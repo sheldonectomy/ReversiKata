@@ -69,7 +69,6 @@ namespace ReversiKata01
             _board.CandidateSquares.Should().BeEquivalentTo(candidates,
                                                opt => opt.WithoutStrictOrdering()
                                                          .Excluding(a => a.Content));
-
         }
 
 		[Test]
@@ -82,7 +81,7 @@ namespace ReversiKata01
 		        new SquareContent(4, 2, "o"),
 		        new SquareContent(5, 3, "o")
 	        };
-	        _board.CandidateSquares.Should().BeEquivalentTo(legalMoves,
+	        _board.LegalMoves.Should().BeEquivalentTo(legalMoves,
                                                 opt => opt.WithoutStrictOrdering()
                                                           .Excluding(a => a.Content));
         }
