@@ -150,18 +150,37 @@ namespace ReversiKata01
 	        }
         }
 
-        private bool testForLine(SquareContent candidate, int xTransform, int yTransform)
+        private bool makeFlipsForMove(int x, int y)
+        {
+            var result = false;
+            var piece = new SquareContent(x, y);
+            for (var xTransform = -1; xTransform <= 1; xTransform++)
+            {
+                for (var yTransform = -1; yTransform <= 1; yTransform++)
+                {
+                    var lineFlipped =
+                        testForLine(piece, xTransform, yTransform, true);
+                    result = result || lineFlipped;
+                }
+            }
+            return result;
+        }
+
+        private bool testForLine(SquareContent candidate, 
+            int xTransform, int yTransform, bool makeMove = false)
         {
             var result = false;
             var currentColor = _nextToMove;
             var opponentColor = _nextToMove == "B" ? "W" : "B";
             int x = candidate.X + xTransform;
             int y = candidate.Y + yTransform;
+            List<SquareContent> flipPeices = new List<SquareContent>();
 
             if(GetSquareContent(x, y) == opponentColor)
             {
                 do
                 {
+                    flipPeices.Add(new SquareContent(x, y));
                     x += xTransform;
                     y += yTransform;
                 }
@@ -169,6 +188,10 @@ namespace ReversiKata01
 
                 if(GetSquareContent(x, y) == currentColor)
                 {
+                    if (makeMove)
+                    {
+                        flipPeices.ForEach(a => SetSquareContent(a.X, a.Y, NextToMove));
+                    }
                     result = true;
                 }
             }
@@ -176,7 +199,50 @@ namespace ReversiKata01
             return result;
         }
 
-		
+        public string DeliminatedStringOuput
+        {
+            get
+            {
+                var output = new StringBuilder();
+                for (var y = 0; y < 8; y++)
+                {
+                    for (var x = 0; x < 8; x++)
+                    {
+                        output.Append(GetSquareContent(x, y));
+                    }
+                    output.Append("|");
+                }
+                output.Append(NextToMove);
+                return output.ToString();
+            }
+        }
+
+        public void SetupBoardFromDelimitedText(string delimitedText)
+        {
+            var input = delimitedText.Split('|');
+            for (var y = 0; y < 8; y++)
+            {
+                for (var x = 0; x < 8; x++)
+                {
+                    SetSquareContent(x, y, input[y].Substring(x, 1));
+                }
+            }
+            NextToMove = input[8];
+        }
+
+        public bool MakeMove(int x, int y)
+        {
+            if(GetSquareContent(x, y) == "." && makeFlipsForMove(x, y))
+            {
+                SetSquareContent(x, y, NextToMove);
+                NextToMove = NextToMove == "B" ? "W" : "B";
+            }
+            return false;
+        }
+
+
+
+
 
     }
 }

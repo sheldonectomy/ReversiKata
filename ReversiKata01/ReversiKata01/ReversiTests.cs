@@ -86,6 +86,39 @@ namespace ReversiKata01
                                                           .Excluding(a => a.Content));
         }
 
+        [Test]
+        public void CanConvertBoardToDelimitedString()
+        {
+            Assert.AreEqual(exampleBoardAtStartDelimitedText(),
+                _board.DeliminatedStringOuput);
+        }
+
+        [Test]
+        public void CanSetupBoardFromDelimitedString()
+        {
+            _board.SetupBoardFromDelimitedText(exampleBoardAfter9MovesDelimitedText());
+            Assert.AreEqual(exampleBoardAfter9MovesDelimitedText(),
+                _board.DeliminatedStringOuput);
+        }
+
+        [Test]
+        public void CanMakeLegalMove()
+        {
+            _board.SetupBoardFromDelimitedText(exampleBoardAfter9MovesDelimitedText());
+            _board.MakeMove(1, 0);
+            Assert.AreEqual(exampleBoardAfter10MovesDelimitedText(),
+                _board.DeliminatedStringOuput);
+        }
+
+        [Test]
+        public void CanMakeLegalMoveWithTwoFlippedRows()
+        {
+            _board.SetupBoardFromDelimitedText(exampleBoardAfter10MovesDelimitedText());
+            _board.MakeMove(5, 5);
+            Assert.AreEqual(exampleBoardAfter11MovesDelimitedText(),
+                _board.DeliminatedStringOuput);
+        }
+
         private static string exampleBoardAtStart()
         {
             return
@@ -98,5 +131,75 @@ namespace ReversiKata01
 ........
 ........";
         }
+
+        private static string exampleBoardAtStartDelimitedText()
+        {
+            return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}",
+                "........",
+                "........",
+                "........",
+                "...BW...",
+                "...WB...",
+                "........",
+                "........",
+                "........",
+                "B");
+        }
+
+        private static string exampleBoardAfter9Moves()
+        {
+            return
+@"........
+..B...W.
+...B..W.
+..BBBBW.
+...BWW..
+...B....
+........
+........";
+        }
+
+        private static string exampleBoardAfter9MovesDelimitedText()
+        {
+            return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}",
+                "........",
+                "..B...W.",
+                "...B..W.",
+                "..BBBBW.",
+                "...BWW..",
+                "...B....",
+                "........",
+                "........",
+                "W");
+        }
+
+        private static string exampleBoardAfter10MovesDelimitedText()
+        {
+            return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}",
+                ".W......",
+                "..W...W.",
+                "...W..W.",
+                "..BBWBW.",
+                "...BWW..",
+                "...B....",
+                "........",
+                "........",
+                "B");
+        }
+
+        private static string exampleBoardAfter11MovesDelimitedText()
+        {
+            return string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}",
+                ".W......",
+                "..W...W.",
+                "...W..W.",
+                "..BBWBW.",
+                "...BBB..",
+                "...B.B..",
+                "........",
+                "........",
+                "W");
+        }
+
     }
 }
