@@ -23,11 +23,12 @@ namespace ReversiKata01
         public void NewBoardHasCorrectSetup()
         {
             var output = new StringBuilder();
+            var board = new Board();
             for(int y = 0; y < 8; y++)
             {
                for(int x = 0; x < 8; x++)
                 {
-                    output.Append(_game.GetSquareContent(x, y));
+                    output.Append(board.GetSquareContent(x, y));
                 }
                 output.Append(
                     y == 7 ? string.Empty : Environment.NewLine);
@@ -89,7 +90,7 @@ namespace ReversiKata01
         public void CanConvertBoardToDelimitedString()
         {
             Assert.AreEqual(exampleBoardAtStartDelimitedText(),
-                _game.DeliminatedStringOuput);
+                _game.DelimitedStringOuput);
         }
 
         [Test]
@@ -97,7 +98,7 @@ namespace ReversiKata01
         {
             _game.SetupBoardFromDelimitedText(exampleBoardAfter9MovesDelimitedText());
             Assert.AreEqual(exampleBoardAfter9MovesDelimitedText(),
-                _game.DeliminatedStringOuput);
+                _game.DelimitedStringOuput);
         }
 
         [Test]
@@ -106,7 +107,8 @@ namespace ReversiKata01
             _game.SetupBoardFromDelimitedText(exampleBoardAfter9MovesDelimitedText());
             _game.MakeMove(1, 0);
             Assert.AreEqual(exampleBoardAfter10MovesDelimitedText(),
-                _game.DeliminatedStringOuput);
+                _game.DelimitedStringOuput);
+            Assert.IsTrue(_game.NextToMove == "B");
         }
 
         [Test]
@@ -115,7 +117,18 @@ namespace ReversiKata01
             _game.SetupBoardFromDelimitedText(exampleBoardAfter10MovesDelimitedText());
             _game.MakeMove(5, 5);
             Assert.AreEqual(exampleBoardAfter11MovesDelimitedText(),
-                _game.DeliminatedStringOuput);
+                _game.DelimitedStringOuput);
+            Assert.IsTrue(_game.NextToMove == "W");
+        }
+
+        [Test]
+        public void CanRecogniseWhenIllegalMoveIsAttempted()
+        {
+            _game.SetupBoardFromDelimitedText(exampleBoardAfter10MovesDelimitedText());
+            Assert.IsFalse(_game.MakeMove(6, 3));
+            Assert.IsTrue(_game.NextToMove == "B");
+            Assert.IsFalse(_game.MakeMove(7, 0));
+            Assert.IsTrue(_game.NextToMove == "B");
         }
 
         [Test]

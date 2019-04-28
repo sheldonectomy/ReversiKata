@@ -6,78 +6,20 @@ using System.Text;
 namespace ReversiKata01
 {
 
-    public class SquareContent
-    {
-        public SquareContent(int x, int y, string content = ".")
-        {
-            X = x;
-            Y = y;
-            Content = content;
-        }
-        public int X { get; }
-        public int Y { get; }
-        public string Content { get; set; }
-    }
-
     public class Game
     {
-        private readonly List<SquareContent> _squareContents = new List<SquareContent>();
+        private readonly Board _board = new Board();
 
         public Game()
         {
-            for (var y = 0; y < 8; y++)
-            {
-                for (var x = 0; x < 8; x++)
-                {
-                    _squareContents.Add(new SquareContent(x, y, "."));
-                }
-            }
-            SetSquareContent(3, 3, "B");
-            SetSquareContent(4, 3, "W");
-            SetSquareContent(3, 4, "W");
-            SetSquareContent(4, 4, "B");
             NextToMove = "B";
-        }
-
-        public string GetSquareContent(int x, int y)
-        {
-            if(x < 0 || x > 7 || y < 0 || y > 7)
-            {
-                return string.Empty;
-            }
-            return _squareContents.First(a => a.X == x && a.Y == y).Content;
-        }
-
-        public void SetSquareContent(int x, int y, string content)
-        {
-            _squareContents.First(a => a.X == x && a.Y == y).Content = content;
-        }
-
-        private void iterateOverSquares(
-            Action<int, int> eachSquareMethod, 
-            Action<int> eachRowMethod = null)
-        {
-            for (var y = 0; y < 8; y++)
-            {
-                for (var x = 0; x < 8; x++)
-                {
-                    eachSquareMethod.Invoke(x, y);
-                }
-                eachRowMethod?.Invoke(y);
-            }
         }
 
         public string GraphicalText
         {
             get
             {
-                var output = new StringBuilder();
-                iterateOverSquares(
-                    eachSquareMethod: (x, y) => output.Append(GetSquareContent(x, y)),
-                    eachRowMethod: (y) => output.Append(
-                                    y == 7 ? string.Empty : Environment.NewLine)
-                );
-                return output.ToString();
+                return _board.GraphicalText;
             }
         }
 
@@ -90,7 +32,7 @@ namespace ReversiKata01
             get
             {
                 var candidates = new List<SquareContent>();
-                iterateOverSquares(
+                _board.DoActionOverSquares(
                     eachSquareMethod: (x, y) =>
                     {
                         if (isCandidateSquare(x, y)
@@ -108,7 +50,7 @@ namespace ReversiKata01
             var result = false;
             var targetColor = NotNextToMove;
 
-            if(GetSquareContent(x, y) == ".")
+            if(_board.GetSquareContent(x, y) == ".")
             {
                 for(var xTransform = -1; xTransform <= 1; xTransform++)
                 {
@@ -123,7 +65,7 @@ namespace ReversiKata01
                         {
 	                        continue;
                         }
-                        result = GetSquareContent(targetX, targetY) == targetColor;
+                        result = _board.GetSquareContent(targetX, targetY) == targetColor;
                     }
                 }
             }
@@ -172,7 +114,6 @@ namespace ReversiKata01
             return result;
         }
 
-
         private bool makeFlipsForMove(int x, int y)
         {
             var result = false;
@@ -199,7 +140,7 @@ namespace ReversiKata01
             int y = candidate.Y + yTransform;
             List<SquareContent> flipPeices = new List<SquareContent>();
 
-            if(GetSquareContent(x, y) == opponentColor)
+            if(_board.GetSquareContent(x, y) == opponentColor)
             {
                 do
                 {
@@ -207,13 +148,13 @@ namespace ReversiKata01
                     x += xTransform;
                     y += yTransform;
                 }
-                while (GetSquareContent(x, y) == opponentColor);
+                while (_board.GetSquareContent(x, y) == opponentColor);
 
-                if(GetSquareContent(x, y) == currentColor)
+                if(_board.GetSquareContent(x, y) == currentColor)
                 {
                     if (makeMove)
                     {
-                        flipPeices.ForEach(a => SetSquareContent(a.X, a.Y, NextToMove));
+                        flipPeices.ForEach(a => _board.SetSquareContent(a.X, a.Y, NextToMove));
                     }
                     result = true;
                 }
@@ -222,34 +163,28 @@ namespace ReversiKata01
             return result;
         }
 
-        public string DeliminatedStringOuput
+        public string DelimitedStringOuput
         {
             get
             {
                 var output = new StringBuilder();
-                iterateOverSquares(
-                    eachSquareMethod: (x, y) => output.Append(GetSquareContent(x, y)),
-                    eachRowMethod: (y) => output.Append("|")
-                );
-                output.Append(NextToMove);
-                return output.ToString();
+                output.Append(_board.DelimitedStringOuput);
+                return output.Append(NextToMove).ToString();
             }
         }
 
         public void SetupBoardFromDelimitedText(string delimitedText)
         {
             var input = delimitedText.Split('|');
-            iterateOverSquares(
-                eachSquareMethod: (x, y) => SetSquareContent(x, y, input[y].Substring(x, 1))
-            );
+            _board.SetupBoardFromTextArray(input);
             NextToMove = input[8];
         }
 
         public bool MakeMove(int x, int y)
         {
-            if(GetSquareContent(x, y) == "." && makeFlipsForMove(x, y))
+            if(_board.GetSquareContent(x, y) == "." && makeFlipsForMove(x, y))
             {
-                SetSquareContent(x, y, NextToMove);
+                _board.SetSquareContent(x, y, NextToMove);
                 NextToMove = NotNextToMove;
             }
             return false;
@@ -260,8 +195,8 @@ namespace ReversiKata01
             get
             {
                 int score = 0;
-                iterateOverSquares(
-                    eachSquareMethod: (x, y) => score += GetSquareContent(x, y) == "W" ? 1 : 0
+                _board.DoActionOverSquares(
+                    eachSquareMethod: (x, y) => score += _board.GetSquareContent(x, y) == "W" ? 1 : 0
                 );
                 return score;
             }
@@ -272,8 +207,8 @@ namespace ReversiKata01
             get
             {
                 int score = 0;
-                iterateOverSquares(
-                    eachSquareMethod: (x, y) => score += GetSquareContent(x, y) == "B" ? 1 : 0
+                _board.DoActionOverSquares(
+                    eachSquareMethod: (x, y) => score += _board.GetSquareContent(x, y) == "B" ? 1 : 0
                 );
                 return score;
             }
