@@ -72,18 +72,28 @@ namespace ReversiKata01
             }
         }
 
-        public string GraphicalText
+        public string GetGraphicalText(bool withCoordinateLabels = false)
         {
-            get
+            var output = new StringBuilder();
+            if(withCoordinateLabels)
             {
-                var output = new StringBuilder();
-                DoActionOverSquares(
-                    eachSquareMethod: (x, y) => output.Append(GetSquareContent(x, y)),
-                    eachRowMethod: (y) => output.Append(
-                                    y == 7 ? string.Empty : Environment.NewLine)
-                );
-                return output.ToString();
+                output.Append($"0 1 2 3 4 5 6 7 {Environment.NewLine}");
+                output.Append($"=============== {Environment.NewLine}");
             }
+            DoActionOverSquares(
+                eachSquareMethod: (x, y) => output.Append($"{GetSquareContent(x, y)} "),
+                eachRowMethod: (y) => 
+                {
+                    if (withCoordinateLabels)
+                    {
+                        output.Append($"|{y.ToString()} ");
+                    }
+                    output.Append(
+                                y == 7 ? string.Empty : Environment.NewLine);
+
+                }  
+            );
+            return output.ToString();
         }
     }
 }

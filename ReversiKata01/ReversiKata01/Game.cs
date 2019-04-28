@@ -19,7 +19,15 @@ namespace ReversiKata01
         {
             get
             {
-                return _board.GraphicalText;
+                return _board.GetGraphicalText();
+            }
+        }
+
+        public string GraphicalTextWithCoordinateLabels
+        {
+            get
+            {
+                return _board.GetGraphicalText(true);
             }
         }
 
@@ -182,12 +190,14 @@ namespace ReversiKata01
 
         public bool MakeMove(int x, int y)
         {
+            var result = false;
             if(_board.GetSquareContent(x, y) == "." && makeFlipsForMove(x, y))
             {
                 _board.SetSquareContent(x, y, NextToMove);
                 NextToMove = NotNextToMove;
+                result = true;
             }
-            return false;
+            return result;
         }
 
         public int WhiteScore

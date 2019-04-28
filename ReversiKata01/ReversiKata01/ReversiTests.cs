@@ -28,7 +28,7 @@ namespace ReversiKata01
             {
                for(int x = 0; x < 8; x++)
                 {
-                    output.Append(board.GetSquareContent(x, y));
+                    output.Append($"{board.GetSquareContent(x, y)} ");
                 }
                 output.Append(
                     y == 7 ? string.Empty : Environment.NewLine);
@@ -182,14 +182,14 @@ namespace ReversiKata01
         private static string exampleBoardAtStart()
         {
             return
-@"........
-........
-........
-...BW...
-...WB...
-........
-........
-........";
+@". . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . B W . . . 
+. . . W B . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . ";
         }
 
         private static string exampleBoardAtStartDelimitedText()
