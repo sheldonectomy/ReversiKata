@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReversiKata01", "ReversiKata01\ReversiKata01.csproj", "{6B603A80-C112-42F5-BDB4-D46085E707D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReversiService", "ReversiService\ReversiService.csproj", "{DB0037B2-9D1C-4E71-AEAD-D9679E407AED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.WPF", "Reversi.WPF\Reversi.WPF.csproj", "{5FEE3EDB-AD1D-4FF1-BE49-38C9256D4BEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{6B603A80-C112-42F5-BDB4-D46085E707D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B603A80-C112-42F5-BDB4-D46085E707D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B603A80-C112-42F5-BDB4-D46085E707D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB0037B2-9D1C-4E71-AEAD-D9679E407AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB0037B2-9D1C-4E71-AEAD-D9679E407AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB0037B2-9D1C-4E71-AEAD-D9679E407AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB0037B2-9D1C-4E71-AEAD-D9679E407AED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FEE3EDB-AD1D-4FF1-BE49-38C9256D4BEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FEE3EDB-AD1D-4FF1-BE49-38C9256D4BEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FEE3EDB-AD1D-4FF1-BE49-38C9256D4BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FEE3EDB-AD1D-4FF1-BE49-38C9256D4BEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
